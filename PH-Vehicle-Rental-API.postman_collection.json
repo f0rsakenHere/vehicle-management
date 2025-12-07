@@ -1,0 +1,736 @@
+{
+	"info": {
+		"name": "PH Vehicle Rental System API",
+		"description": "Complete API collection for testing the Vehicle Rental System",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:3000",
+			"type": "string"
+		},
+		{
+			"key": "adminToken",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "customerToken",
+			"value": "",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register Admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    const response = pm.response.json();",
+									"    if (response.data && response.data.token) {",
+									"        pm.collectionVariables.set('adminToken', response.data.token);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Admin User\",\n  \"email\": \"admin@rental.com\",\n  \"password\": \"admin123\",\n  \"phone\": \"+1234567890\",\n  \"role\": \"admin\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/auth/signup",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "auth", "signup"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register Customer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    const response = pm.response.json();",
+									"    if (response.data && response.data.token) {",
+									"        pm.collectionVariables.set('customerToken', response.data.token);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"John Customer\",\n  \"email\": \"customer@rental.com\",\n  \"password\": \"customer123\",\n  \"phone\": \"+9876543210\",\n  \"role\": \"customer\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/auth/signup",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "auth", "signup"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login Admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    if (response.data && response.data.token) {",
+									"        pm.collectionVariables.set('adminToken', response.data.token);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"admin@rental.com\",\n  \"password\": \"admin123\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/auth/signin",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "auth", "signin"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login Customer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    if (response.data && response.data.token) {",
+									"        pm.collectionVariables.set('customerToken', response.data.token);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"customer@rental.com\",\n  \"password\": \"customer123\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/auth/signin",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "auth", "signin"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Vehicles",
+			"item": [
+				{
+					"name": "Create Vehicle (Admin)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"vehicle_name\": \"Toyota Camry 2024\",\n  \"type\": \"car\",\n  \"registration_number\": \"ABC-1234\",\n  \"daily_rent_price\": 50,\n  \"availability_status\": \"available\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/vehicles",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "vehicles"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Bike (Admin)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"vehicle_name\": \"Yamaha R15\",\n  \"type\": \"bike\",\n  \"registration_number\": \"BIKE-001\",\n  \"daily_rent_price\": 20,\n  \"availability_status\": \"available\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/vehicles",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "vehicles"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Van (Admin)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"vehicle_name\": \"Ford Transit Van\",\n  \"type\": \"van\",\n  \"registration_number\": \"VAN-2023\",\n  \"daily_rent_price\": 80,\n  \"availability_status\": \"available\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/vehicles",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "vehicles"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create SUV (Admin)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"vehicle_name\": \"Toyota Fortuner\",\n  \"type\": \"SUV\",\n  \"registration_number\": \"SUV-9999\",\n  \"daily_rent_price\": 100,\n  \"availability_status\": \"available\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/vehicles",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "vehicles"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Vehicles (Public)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/vehicles",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "vehicles"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Vehicle by ID (Public)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/vehicles/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "vehicles", "1"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Vehicle (Admin)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"daily_rent_price\": 55\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/vehicles/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "vehicles", "1"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Vehicle (Admin)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/vehicles/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "vehicles", "1"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Get All Users (Admin)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/users",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "users"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Own Profile (Customer)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{customerToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"John Updated\",\n  \"phone\": \"+1111111111\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/users/2",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "users", "2"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User Role (Admin)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"role\": \"admin\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/users/2",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "users", "2"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User (Admin)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/users/3",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "users", "3"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Bookings",
+			"item": [
+				{
+					"name": "Create Booking (Customer)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{customerToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"customer_id\": 1,\n  \"vehicle_id\": 2,\n  \"rent_start_date\": \"2024-01-15\",\n  \"rent_end_date\": \"2024-01-20\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/bookings",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "bookings"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Booking (Admin)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"customer_id\": 1,\n  \"vehicle_id\": 2,\n  \"rent_start_date\": \"2024-12-25\",\n  \"rent_end_date\": \"2024-12-30\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/bookings",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "bookings"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Bookings (Customer)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{customerToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/bookings",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "bookings"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Bookings (Admin)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/bookings",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "bookings"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cancel Booking (Customer)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{customerToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"status\": \"cancelled\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/bookings/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "bookings", "1"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Mark as Returned (Admin)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"status\": \"returned\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/bookings/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "bookings", "1"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Error Tests",
+			"item": [
+				{
+					"name": "Invalid Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"wrong@email.com\",\n  \"password\": \"wrongpassword\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/auth/signin",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "auth", "signin"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Vehicle Without Token",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"vehicle_name\": \"Test Car\",\n  \"type\": \"car\",\n  \"registration_number\": \"TEST-123\",\n  \"daily_rent_price\": 30\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/vehicles",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "vehicles"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Vehicle as Customer (Forbidden)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{customerToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"vehicle_name\": \"Test Car\",\n  \"type\": \"car\",\n  \"registration_number\": \"TEST-456\",\n  \"daily_rent_price\": 30\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/vehicles",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "vehicles"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Invalid Date Range Booking",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{customerToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"customer_id\": 2,\n  \"vehicle_id\": 1,\n  \"rent_start_date\": \"2024-12-20\",\n  \"rent_end_date\": \"2024-12-15\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/bookings",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "bookings"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Duplicate Email Registration",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Duplicate User\",\n  \"email\": \"admin@rental.com\",\n  \"password\": \"password123\",\n  \"phone\": \"+9999999999\",\n  \"role\": \"customer\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/auth/signup",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "auth", "signup"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Health Check",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/",
+					"host": ["{{baseUrl}}"],
+					"path": [""]
+				}
+			},
+			"response": []
+		}
+	]
+}

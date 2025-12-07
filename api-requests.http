@@ -1,0 +1,232 @@
+# API Test Requests
+# Use with VS Code REST Client Extension or import to Postman
+
+### Variables
+@baseUrl = http://localhost:3000
+@adminToken = YOUR_ADMIN_TOKEN_HERE
+@customerToken = YOUR_CUSTOMER_TOKEN_HERE
+
+### Health Check
+GET {{baseUrl}}/
+
+###############
+# AUTH
+###############
+
+### Register Admin
+POST {{baseUrl}}/api/v1/auth/signup
+Content-Type: application/json
+
+{
+  "name": "Admin User",
+  "email": "admin@rental.com",
+  "password": "admin123",
+  "phone": "+1234567890",
+  "role": "admin"
+}
+
+### Register Customer
+POST {{baseUrl}}/api/v1/auth/signup
+Content-Type: application/json
+
+{
+  "name": "John Customer",
+  "email": "customer@rental.com",
+  "password": "customer123",
+  "phone": "+9876543210",
+  "role": "customer"
+}
+
+### Login Admin
+POST {{baseUrl}}/api/v1/auth/signin
+Content-Type: application/json
+
+{
+  "email": "admin@rental.com",
+  "password": "admin123"
+}
+
+### Login Customer
+POST {{baseUrl}}/api/v1/auth/signin
+Content-Type: application/json
+
+{
+  "email": "customer@rental.com",
+  "password": "customer123"
+}
+
+###############
+# VEHICLES
+###############
+
+### Get All Vehicles (Public)
+GET {{baseUrl}}/api/v1/vehicles
+
+### Get Vehicle by ID (Public)
+GET {{baseUrl}}/api/v1/vehicles/1
+
+### Create Vehicle (Admin Only)
+POST {{baseUrl}}/api/v1/vehicles
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "vehicle_name": "Toyota Camry 2023",
+  "type": "car",
+  "registration_number": "ABC-1234",
+  "daily_rent_price": 50.00,
+  "availability_status": "available"
+}
+
+### Create Another Vehicle
+POST {{baseUrl}}/api/v1/vehicles
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "vehicle_name": "Yamaha R15",
+  "type": "bike",
+  "registration_number": "BIKE-001",
+  "daily_rent_price": 20.00,
+  "availability_status": "available"
+}
+
+### Update Vehicle (Admin Only)
+PUT {{baseUrl}}/api/v1/vehicles/1
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "daily_rent_price": 55.00
+}
+
+### Delete Vehicle (Admin Only)
+DELETE {{baseUrl}}/api/v1/vehicles/1
+Authorization: Bearer {{adminToken}}
+
+###############
+# USERS
+###############
+
+### Get All Users (Admin Only)
+GET {{baseUrl}}/api/v1/users
+Authorization: Bearer {{adminToken}}
+
+### Update Own Profile (Customer)
+PUT {{baseUrl}}/api/v1/users/2
+Content-Type: application/json
+Authorization: Bearer {{customerToken}}
+
+{
+  "name": "John Updated",
+  "phone": "+1111111111"
+}
+
+### Update User Role (Admin Only)
+PUT {{baseUrl}}/api/v1/users/2
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "role": "admin"
+}
+
+### Delete User (Admin Only)
+DELETE {{baseUrl}}/api/v1/users/3
+Authorization: Bearer {{adminToken}}
+
+###############
+# BOOKINGS
+###############
+
+### Create Booking (Customer)
+POST {{baseUrl}}/api/v1/bookings
+Content-Type: application/json
+Authorization: Bearer {{customerToken}}
+
+{
+  "vehicle_id": 1,
+  "rent_start_date": "2024-12-15",
+  "rent_end_date": "2024-12-20"
+}
+
+### Get All Bookings (Admin sees all, Customer sees own)
+GET {{baseUrl}}/api/v1/bookings
+Authorization: Bearer {{customerToken}}
+
+### Cancel Booking (Customer - before start date)
+PUT {{baseUrl}}/api/v1/bookings/1
+Content-Type: application/json
+Authorization: Bearer {{customerToken}}
+
+{
+  "status": "cancelled"
+}
+
+### Mark Booking as Returned (Admin Only)
+PUT {{baseUrl}}/api/v1/bookings/1
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "status": "returned"
+}
+
+###############
+# ERROR TESTS
+###############
+
+### Test Invalid Credentials
+POST {{baseUrl}}/api/v1/auth/signin
+Content-Type: application/json
+
+{
+  "email": "wrong@email.com",
+  "password": "wrongpassword"
+}
+
+### Test Unauthorized Access (No Token)
+POST {{baseUrl}}/api/v1/vehicles
+Content-Type: application/json
+
+{
+  "vehicle_name": "Test Car",
+  "type": "car",
+  "registration_number": "TEST-123",
+  "daily_rent_price": 30
+}
+
+### Test Forbidden Access (Customer trying admin action)
+POST {{baseUrl}}/api/v1/vehicles
+Content-Type: application/json
+Authorization: Bearer {{customerToken}}
+
+{
+  "vehicle_name": "Test Car",
+  "type": "car",
+  "registration_number": "TEST-123",
+  "daily_rent_price": 30
+}
+
+### Test Invalid Date Range
+POST {{baseUrl}}/api/v1/bookings
+Content-Type: application/json
+Authorization: Bearer {{customerToken}}
+
+{
+  "vehicle_id": 1,
+  "rent_start_date": "2024-12-20",
+  "rent_end_date": "2024-12-15"
+}
+
+### Test Duplicate Email
+POST {{baseUrl}}/api/v1/auth/signup
+Content-Type: application/json
+
+{
+  "name": "Duplicate User",
+  "email": "admin@rental.com",
+  "password": "password123",
+  "phone": "+9999999999",
+  "role": "customer"
+}
